@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  java-app:
+    image: eclipse-temurin:8
+    container_name: java-app
+    volumes:
+      - ./backend:/app:rw
+    working_dir: /app
+    command: ["java", "-jar", "app.jar"]
+    networks:
+      - app-network
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      python-wrapper:
+        condition: service_started
+
+  python-wrapper:
+    image: python:3.13
+    container_name: python-wrapper
+    volumes:
+      - ./wrapper:/app:rw
+    working_dir: /app
+    command: ["python", "wrapper.py"]
+    networks:
+      - app-network
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.1
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elastic_data:/usr/share/elasticsearch/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  elastic_data:
