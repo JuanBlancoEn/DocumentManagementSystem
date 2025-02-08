@@ -1,6 +1,6 @@
 services:
   java-app:
-    image: eclipse-temurin:8
+    image: eclipse-temurin:21
     container_name: java-app
     volumes:
       - ./backend:/app:rw
