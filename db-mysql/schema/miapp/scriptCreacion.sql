@@ -1,0 +1,16 @@
+CREATE TABLE Users (
+	id INT NOT NULL,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(20) NOT NULL,
+    PRIMARY KEY(id),
+    CONSTRAINT UNIQUE (username)
+);
+
+#ALTER TABLE Users MODIFY COLUMN id INT NOT NULL AUTO_INCREMENT;
+
+#ALTER TABLE Users AUTO_INCREMENT=1;
+
+INSERT INTO Users (username, password)
+VALUES ('admin', 'admin1234');
+
+

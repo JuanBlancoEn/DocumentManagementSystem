@@ -14,6 +14,8 @@ services:
         condition: service_healthy
       python-wrapper:
         condition: service_started
+      mysql-db:
+        condition: service_healthy
 
   python-wrapper:
     build: ./wrapper
@@ -27,6 +29,27 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
+
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: miapp
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      retries: 5
+      start_period: 10s
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.17.1
