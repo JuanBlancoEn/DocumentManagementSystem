@@ -1,8 +1,10 @@
 package com.blanco.documents.User;
 
-import java.util.UUID;
+import java.util.*;
+
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +24,7 @@ public class User {
     @Column(nullable= false)
     @Setter private String password;
 
+    @Email(message = "Introduce un correo valido")
     @Column(nullable = false, unique = true)
     @Setter private String email;
 

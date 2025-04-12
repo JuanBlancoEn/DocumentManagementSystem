@@ -18,8 +18,14 @@ class DatabaseLoad {
   CommandLineRunner initDatabase(UserRepository repository) {
 
     return args -> {
-      log.info("Preloading " + repository.save(new User("Bilbo Baggins", "burglar", "Bilbo@gmail.com")));
-      log.info("Preloading " + repository.save(new User("Frodo Baggins", "thief", "Frodo@gmail.com")));
+      // Verificar si ya existen usuarios antes de insertar
+      if (!repository.existsByUsername("Bilbo Baggins")) {
+        log.info("Preloading " + repository.save(new User("Bilbo Baggins", "burglar", "Bilbo@gmail.com")));
+      }
+
+      if (!repository.existsByUsername("Frodo Baggins")) {
+        log.info("Preloading " + repository.save(new User("Frodo Baggins", "thief", "Frodo@gmail.com")));
+      }
     };
   }
 }
