@@ -1,0 +1,18 @@
+version: '3.8'  # ✅ Agregar la versión de Compose
+
+services:
+  mysql:
+    container_name: 'dbTFG'
+    image: 'mysql:8.0.33'
+    environment:
+      - 'MYSQL_DATABASE=mydatabase'
+      - 'MYSQL_PASSWORD=secret'
+      - 'MYSQL_ROOT_PASSWORD=verysecret'
+      - 'MYSQL_USER=myuser'
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql  # ✅ Agregar volumen para persistencia
+
+volumes:
+  mysql_data:  # ✅ Definir volumen
