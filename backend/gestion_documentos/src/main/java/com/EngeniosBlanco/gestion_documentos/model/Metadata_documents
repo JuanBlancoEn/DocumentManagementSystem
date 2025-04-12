@@ -1,0 +1,41 @@
+package com.EngeniosBlanco.gestion_documentos.model;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Date;
+import java.util.UUID;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "Metadata_documents")
+public class Metadata_documents {
+    @Id
+    private String id = UUID.randomUUID().toString();
+
+    @ManyToOne
+    @JoinColumn(name = "userId", nullable = false)
+    private String userId;
+
+    private String titulo;
+    private String autor;
+    private Date fecha_creacion;
+    private int num_paginas;
+    private long tamano;
+    private String ruta;
+
+    // Constructores
+    public Metadata_documents() {}
+    public Metadata_documents(String userId, String titulo, String autor, Date fecha_creacion, int num_paginas, long tamano, String ruta) {
+        this.userId = userId;
+        this.titulo = titulo;
+        this.autor = autor;
+        this.fecha_creacion = fecha_creacion;
+        this.num_paginas = num_paginas;
+        this.tamano = tamano;
+        this.ruta = ruta;
+    }
+
+}

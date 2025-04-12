@@ -31,7 +31,7 @@ services:
         condition: service_healthy
 
   mysql-db:
-    image: mysql:8.0
+    image: mysql:8.0.33
     container_name: mysql-db
     restart: always
     environment:
@@ -42,7 +42,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql_data:/db-mysql/var/lib/mysql
     networks:
       - app-network
     healthcheck:
@@ -76,3 +76,4 @@ networks:
 
 volumes:
   elastic_data:
+  mysql_data:
