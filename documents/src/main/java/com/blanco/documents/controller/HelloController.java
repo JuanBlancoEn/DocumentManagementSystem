@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloController {
 
-    @GetMapping("/")
+    @GetMapping("/home")
     public String home() {
         return "¡Hola! El servidor está funcionando 😊";
     }

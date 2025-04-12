@@ -5,10 +5,30 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.blanco.documents.Auth.PasswordService;
+
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    private PasswordService passwordService;
+
+    @Autowired
+    public UserService(UserRepository userRepository, PasswordService passwordService) {
+        this.userRepository = userRepository;
+        this.passwordService = passwordService;
+    }
+
+    public User saveUser(User user) {
+        // Cifrar la contraseña antes de guardar
+        user.setPassword(passwordService.encodePassword(user.getPassword()));
+        return userRepository.save(user);
+    }
+
+        // Método para verificar si la contraseña es correcta
+    public boolean validatePassword(String rawPassword, String storedPassword) {
+        return passwordService.matches(rawPassword, storedPassword);
+    }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -18,15 +38,27 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public List<User> getUserByName(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    public Optional<User> getUserByName(String username) {
+        // Devolver el primer usuario encontrado (en caso de que existan múltiples, debería ser un error)
+        return userRepository.findByUsername(username).stream().findFirst();
     }
 
     public void deleteUser(UUID id) {
         userRepository.deleteById(id);
     }
+
+    // Nuevo método para validar el login
+    public boolean authenticateUser(String username, String rawPassword) {
+        Optional<User> userOptional = getUserByName(username);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            // Comparar la contraseña ingresada con la almacenada (cifrada)
+            return passwordService.matches(rawPassword, user.getPassword());
+        }
+
+        return false; // Usuario no encontrado
+    }
+
+
 }

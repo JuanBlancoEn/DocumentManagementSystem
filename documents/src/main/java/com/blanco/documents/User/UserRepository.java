@@ -10,6 +10,6 @@ import java.util.*;
 
 @RepositoryRestResource(collectionResourceRel = "users", path = "users")
 public interface UserRepository extends JpaRepository<User, UUID> {
-    List<User> findByUsername(@Param("username") String username);
+    Optional<User> findByUsername(@Param("username") String username);
     boolean existsByUsername(String username);
 }
