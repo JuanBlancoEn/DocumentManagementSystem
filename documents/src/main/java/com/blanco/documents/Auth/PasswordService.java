@@ -1,6 +1,4 @@
 package com.blanco.documents.Auth;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,7 +8,6 @@ public class PasswordService {
 
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
     public PasswordService() {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
