@@ -13,7 +13,6 @@ public class UserService {
     private UserRepository userRepository;
     private PasswordService passwordService;
 
-    @Autowired
     public UserService(UserRepository userRepository, PasswordService passwordService) {
         this.userRepository = userRepository;
         this.passwordService = passwordService;
@@ -58,6 +57,29 @@ public class UserService {
         }
 
         return false; // Usuario no encontrado
+    }
+
+    public User updateUser(UUID id, User updatedUser) {
+        User existing = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+    
+        existing.setUsername(updatedUser.getUsername());
+        existing.setEmail(updatedUser.getEmail());
+        // No cambies password aquí por seguridad
+        return userRepository.save(existing);
+    }
+
+    public void updatePassword(UUID id, String newPassword) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+    
+        user.setPassword(passwordService.encodePassword(newPassword));
+        userRepository.save(user);
+    }
+
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
 

@@ -5,7 +5,6 @@ import com.blanco.documents.User.UserRepository;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,7 +13,6 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordService passwordService;
 
-    @Autowired
     public AuthService(UserRepository userRepository, PasswordService passwordService) {
         this.userRepository = userRepository;
         this.passwordService = passwordService;

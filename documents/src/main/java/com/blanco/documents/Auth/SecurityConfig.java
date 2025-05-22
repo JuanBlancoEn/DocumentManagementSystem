@@ -18,29 +18,19 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable()) // Desactiva CSRF
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtFilter) throws Exception {
+        http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/register", "/home").permitAll() // Permite el acceso libre a /login, /register, /home
-                .requestMatchers("/api/**").permitAll() // Permite el acceso libre a /api/**
-                .anyRequest().authenticated() // El resto requiere autenticación
+                .requestMatchers("/api/users/login", "/api/users/register").permitAll()
+                .anyRequest().authenticated()
             )
-            .formLogin(form -> form  // Usar la configuración por defecto para formLogin
-                .permitAll()  // Permite acceso libre a la página de login
-                .defaultSuccessUrl("/home", true)  // Redirige a /home después del login exitoso
-            )
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")  // Redirige al login después de logout
-            )
-            .userDetailsService(customUserDetailsService);  // Utiliza nuestro UserDetailsService personalizado
-
+            .addFilterBefore(jwtFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
+    
         return http.build();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    // @Bean
+    // public PasswordEncoder passwordEncoder() {
+    //     return new BCryptPasswordEncoder();
+    // }
 }
